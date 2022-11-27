@@ -25,9 +25,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
-@Transactional
 @Slf4j
-@Component
 public class UserServiceImpl  implements UserService, UserDetailsService {
 
     private final UserRepository userRepo;
