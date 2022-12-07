@@ -4,7 +4,11 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.project.mypfinance.config.ConfigProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,9 +31,11 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
     private final AccessDeniedHandler accessDeniedHandler;
+    private final ConfigProperties configProperties;
 
-    public CustomAuthorizationFilter(AccessDeniedHandler accessDeniedHandler) {
+    public CustomAuthorizationFilter(AccessDeniedHandler accessDeniedHandler, ConfigProperties configProperties) {
         this.accessDeniedHandler = accessDeniedHandler;
+        this.configProperties = configProperties;
     }
 
     @Override
@@ -41,7 +47,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
                 try {
                     String token = authorizationHeader.substring("Bearer ".length());
-                    Algorithm algorithm = Algorithm.HMAC256("secretAlgorithm".getBytes());
+                    Algorithm algorithm = Algorithm.HMAC256(configProperties.secretKey().getBytes());
 
                     JWTVerifier verifier = JWT.require(algorithm).build();
                     DecodedJWT decodedJWT = verifier.verify(token);

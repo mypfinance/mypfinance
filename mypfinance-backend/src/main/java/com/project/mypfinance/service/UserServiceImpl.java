@@ -16,9 +16,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.transaction.Transactional;
 import java.util.*;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -26,6 +26,8 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 @Slf4j
+@Component
+@Transactional
 public class UserServiceImpl  implements UserService, UserDetailsService {
 
     private final UserRepository userRepo;
