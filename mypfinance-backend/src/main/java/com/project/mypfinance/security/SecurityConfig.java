@@ -1,5 +1,6 @@
 package com.project.mypfinance.security;
 
+import com.project.mypfinance.config.ConfigProperties;
 import com.project.mypfinance.exception.CustomAccessDeniedHandler;
 import com.project.mypfinance.exception.CustomAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final ConfigProperties configProperties;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -39,13 +41,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         CustomAuthenticationFilter customAuthFilter = new CustomAuthenticationFilter(
-                customAuthenticationEntryPoint(), authenticationManagerBean());
+                customAuthenticationEntryPoint(), authenticationManagerBean(), configProperties);
         customAuthFilter.setFilterProcessesUrl("/api/login");
 
         http.cors().and().csrf().disable();
 
 //        For Security operations:
-        http.authorizeRequests().antMatchers("/api/register**", "/api/login**", "/api/refresh/token/**").permitAll();
+        http.authorizeRequests().antMatchers("/api/register/**", "/api/login*", "/api/refresh/token/**").permitAll();
 
 //        For User operations:
         http.authorizeRequests().antMatchers(GET, "/api/users*").hasAnyRole(ADMIN);
@@ -79,7 +81,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().anyRequest().authenticated()
                 .and().exceptionHandling().accessDeniedHandler(customAccessDeniedHandler());
         http.addFilter(customAuthFilter);
-        http.addFilterBefore(new CustomAuthorizationFilter(customAccessDeniedHandler()), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new CustomAuthorizationFilter(customAccessDeniedHandler(), configProperties),
+                UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean

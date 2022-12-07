@@ -3,6 +3,7 @@ package com.project.mypfinance.security;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.mypfinance.config.ConfigProperties;
 import com.project.mypfinance.exception.CustomAuthenticationEntryPoint;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -32,10 +33,14 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final ConfigProperties configProperties;
 
-    public CustomAuthenticationFilter(CustomAuthenticationEntryPoint customAuthenticationEntryPoint, AuthenticationManager authenticationManager){
+    public CustomAuthenticationFilter(CustomAuthenticationEntryPoint customAuthenticationEntryPoint,
+                                      AuthenticationManager authenticationManager,
+                                      ConfigProperties configProperties){
         this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
         this.authenticationManager = authenticationManager;
+        this.configProperties = configProperties;
     }
 
     @SneakyThrows
@@ -59,7 +64,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
         User user = (User)authentication.getPrincipal();
-        Algorithm algo = Algorithm.HMAC256("secretAlgorithm".getBytes());
+        Algorithm algo = Algorithm.HMAC256(configProperties.secretKey().getBytes());
 
         String accessToken = JWT.create()
                 .withSubject(user.getUsername())
