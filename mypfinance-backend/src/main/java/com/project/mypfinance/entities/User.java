@@ -49,6 +49,10 @@ public class User {
     @JsonIgnore
     private Set<Role> roles;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private Set<IncomeCategory> incomeCategories;
+
     public User() {
     }
 
@@ -83,4 +87,15 @@ public class User {
         setRoles(newRoles);
     }
 
+    public void addIncomeCategoryToUser(IncomeCategory incomeCategory){
+        Set<IncomeCategory> newCategories = new HashSet<>();
+        if(this.incomeCategories != null){
+            newCategories.add(incomeCategory);
+            newCategories.addAll(this.incomeCategories);
+        }
+        else
+            newCategories.add(incomeCategory);
+
+        setIncomeCategories(newCategories);
+    }
 }
