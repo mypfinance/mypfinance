@@ -22,12 +22,14 @@ import static org.springframework.http.HttpStatus.*;
 @Slf4j
 public class TransactionServiceImpl implements TransactionService {
     private final UserRepository userRepo;
+    private final IncomeCategoryRepository incomeCategoryRepo;
     private final ExpenseCategoryRepository expenseCategoryRepo;
 
 
     @Autowired
-    public TransactionServiceImpl(@Lazy UserRepository userRepo, ExpenseCategoryRepository expenseCategoryRepo) {
+    public TransactionServiceImpl(@Lazy UserRepository userRepo, IncomeCategoryRepository incomeCategoryRepo, ExpenseCategoryRepository expenseCategoryRepo) {
         this.userRepo = userRepo;
+        this.incomeCategoryRepo = incomeCategoryRepo;
         this.expenseCategoryRepo = expenseCategoryRepo;
 
     }
@@ -37,9 +39,9 @@ public class TransactionServiceImpl implements TransactionService {
         if(type.equals("expense"))
             expenseCategoryRepo.save((ExpenseCategory) category.get());
         else
+            incomeCategoryRepo.save((IncomeCategory) category.get());
         log.info("Category has been saved successfully!");
     }
-
 
     @Override
     public Optional<?> getCategory(String type, Long categoryId) {
@@ -47,6 +49,8 @@ public class TransactionServiceImpl implements TransactionService {
 
         if(type.equals("expense"))
             category = expenseCategoryRepo.findExpenseCategoryByExpenseCategoryIdAndUser(categoryId, getUser());
+        else
+            category = incomeCategoryRepo.findIncomeCategoryByIncomeCategoryIdAndUser(categoryId, getUser());
 
         if(category.isEmpty()) {
             log.error("Category: " + categoryId + " doesn't exist in the DB!");
@@ -61,6 +65,8 @@ public class TransactionServiceImpl implements TransactionService {
 
         if(type.equals("expense"))
             category = expenseCategoryRepo.findExpenseCategoryByCategoryNameAndUser(categoryName, getUser());
+        else
+            category = incomeCategoryRepo.findIncomeCategoryByCategoryNameAndUser(categoryName, getUser());
 
         if(category.isEmpty()) {
             log.error("Category: " + categoryName + " doesn't exist in the DB!");
@@ -76,7 +82,8 @@ public class TransactionServiceImpl implements TransactionService {
 
         if(type.equals("expense"))
             categories = expenseCategoryRepo.findExpenseCategoriesByUser(user);
-
+        else
+            categories = incomeCategoryRepo.findIncomeCategoriesByUser(user);
 
         if(categories.size() == 0) {
             log.error("There are no registered categories.");
@@ -133,6 +140,10 @@ public class TransactionServiceImpl implements TransactionService {
         if(type.equals("expense")) {
             ExpenseCategory expenseCategory = new ExpenseCategory(dbName, user);
             expenseCategoryRepo.save(expenseCategory);
+        }else{
+            IncomeCategory incomeCategory = new IncomeCategory(dbName, user);
+            user.addIncomeCategoryToUser(incomeCategory);
+            incomeCategoryRepo.save(incomeCategory);
         }
         log.info("Category has been added to the user successfully!");
     }
@@ -146,6 +157,10 @@ public class TransactionServiceImpl implements TransactionService {
         if(type.equals("expense")) {
             ExpenseCategory expenseCategory = new ExpenseCategory(dbName, color, user);
             expenseCategoryRepo.save(expenseCategory);
+        }else{
+            IncomeCategory incomeCategory = new IncomeCategory(dbName, color, user);
+            user.addIncomeCategoryToUser(incomeCategory);
+            incomeCategoryRepo.save(incomeCategory);
         }
         log.info("Category has been added to the user successfully!");
     }
