@@ -62,6 +62,10 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<IncomeCategory> incomeCategories;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private List<IncomeTransaction> incomeTransactions;
+
     public User() {
     }
 

@@ -31,6 +31,10 @@ public class IncomeCategory {
     @Nullable
     private String color;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "incomeCategory")
+    private List<IncomeTransaction> incomeTransactions;
+
     @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
     @JoinColumn(name = "user_income_category_id", referencedColumnName = "user_id")
     @JsonIgnore
@@ -59,11 +63,11 @@ public class IncomeCategory {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         IncomeCategory that = (IncomeCategory) o;
-        return Objects.equals(incomeCategoryId, that.incomeCategoryId) && Objects.equals(categoryName, that.categoryName) && Objects.equals(user, that.user);
+        return Objects.equals(incomeCategoryId, that.incomeCategoryId) && Objects.equals(categoryName, that.categoryName) && Objects.equals(incomeTransactions, that.incomeTransactions) && Objects.equals(user, that.user);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(incomeCategoryId, categoryName, user);
+        return Objects.hash(incomeCategoryId, categoryName, incomeTransactions, user);
     }
 }
