@@ -1,4 +1,4 @@
-import IncomeCategoriesService from '../../services/income-categories-service'
+import IncomeCategoriesService from '../../services/income-categories-services'
 import { ADD_ALERT } from '@/store/_actiontypes'
 
 const state = {
