@@ -33,6 +33,7 @@ public interface TransactionService {
     HashMap<String, Object> getTransactionByCurrentYear(String type);
 
     HashMap<String, Object> getTransactionByYearMonthAndCategory(Integer year, Integer month, String type);
+
     HashMap<String, Object> getAllUserTransactions(Pageable pageable, String type);
 
     void addCategory(String categoryName, String type);

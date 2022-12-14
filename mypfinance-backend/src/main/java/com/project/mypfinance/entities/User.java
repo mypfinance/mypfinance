@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static javax.persistence.CascadeType.*;
@@ -51,6 +52,14 @@ public class User {
 
     @JsonIgnore
     @OneToMany(mappedBy = "user")
+    private Set<ExpenseCategory> expenseCategories;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private List<ExpenseTransaction> expenseTransactions;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
     private Set<IncomeCategory> incomeCategories;
 
     public User() {
@@ -85,6 +94,18 @@ public class User {
             newRoles.add(role);
 
         setRoles(newRoles);
+    }
+
+    public void addExpenseCategoryToUser(ExpenseCategory expenseCategory){
+        Set<ExpenseCategory> newCategories = new HashSet<>();
+        if(this.expenseCategories != null){
+            newCategories.add(expenseCategory);
+            newCategories.addAll(this.expenseCategories);
+        }
+        else
+            newCategories.add(expenseCategory);
+
+        setExpenseCategories(newCategories);
     }
 
     public void addIncomeCategoryToUser(IncomeCategory incomeCategory){
