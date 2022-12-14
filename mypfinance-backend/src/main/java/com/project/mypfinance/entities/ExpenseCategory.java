@@ -29,6 +29,9 @@ public class ExpenseCategory {
     @Nullable
     private String color;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "expenseCategory")
+    private List<ExpenseTransaction> expenseTransactions;
 
     @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
     @JoinColumn(name = "user_category_id", referencedColumnName = "user_id")
@@ -64,7 +67,7 @@ public class ExpenseCategory {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ExpenseCategory category = (ExpenseCategory) o;
-        return Objects.equals(expenseCategoryId, category.expenseCategoryId) && Objects.equals(categoryName, category.categoryName) &&  Objects.equals(user, category.user);
+        return Objects.equals(expenseCategoryId, category.expenseCategoryId) && Objects.equals(categoryName, category.categoryName) && Objects.equals(expenseTransactions, category.expenseTransactions) && Objects.equals(user, category.user);
     }
 
     @Override

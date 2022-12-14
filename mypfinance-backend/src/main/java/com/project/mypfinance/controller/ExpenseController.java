@@ -1,6 +1,7 @@
 package com.project.mypfinance.controller;
 
 import com.project.mypfinance.entities.ExpenseCategory;
+import com.project.mypfinance.entities.ExpenseTransaction;
 import com.project.mypfinance.entities.User;
 import com.project.mypfinance.service.UserService;
 import com.project.mypfinance.service.TransactionService;
@@ -84,6 +85,11 @@ public class ExpenseController extends ControlHelper {
         return ResponseEntity.ok("Expense category has been saved successfully!");
     }
 
+    @PostMapping(value = "/add/expense/transaction", consumes = "application/json")
+    public ResponseEntity<String> addExpenseTransaction(@RequestBody ExpenseTransaction transaction) {
+        service.addTransaction("expense",transaction.getDate().toString(), transaction.getExpenseAmount(), transaction.getCategoryName().toLowerCase(), transaction.getDescription());
+        return ResponseEntity.ok().body("Transaction added successfully!");
+    }
 
     @PutMapping("/modify/expense/category/{categoryId}")
     public ResponseEntity<?> modifyExpenseCategory(@PathVariable Long categoryId, @RequestBody ExpenseCategory modifiedCategory) {
@@ -110,6 +116,41 @@ public class ExpenseController extends ControlHelper {
         }).orElse(ResponseEntity.notFound().build());
     }
 
+    @PutMapping("/modify/expense/transaction/{transactionId}")
+    public ResponseEntity<?> modifyExpenseTransaction(@PathVariable Long transactionId, @RequestBody ExpenseTransaction modifiedTransaction){
+        Optional<ExpenseTransaction> transaction = ((Optional<ExpenseTransaction>)service.getTransactionById("expense", transactionId));
+
+        if(transaction.isEmpty())
+            throw new ResponseStatusException(NOT_FOUND,"There is no transaction with id: " + transactionId);
+
+        if(modifiedTransaction.getExpenseTransactionId() != null)
+            throw new ResponseStatusException(NOT_ACCEPTABLE, "Don't provide an id for the new transaction, because you cannot modify it.");
+
+        if (modifiedTransaction.getCategoryName() != null) {
+            if (service.categoryExistsByName("expense", modifiedTransaction.getCategoryName())) {
+                modifiedTransaction.setExpenseCategory((ExpenseCategory) service
+                        .getCategoryByName("expense", modifiedTransaction.getCategoryName()).get());
+            } else {
+                Optional<ExpenseCategory> newCategory = Optional.of(
+                        new ExpenseCategory(modifiedTransaction.getCategoryName(), userService.getUser()));
+                service.saveCategoryToDB(newCategory, "expense");
+                modifiedTransaction.setExpenseCategory(newCategory.get());
+            }
+        }
+
+        return transaction.map(t -> {
+            modifiedTransaction.setCategoryName(modifiedTransaction.getCategoryName() == null ? t.getCategoryName().toLowerCase() : modifiedTransaction.getCategoryName().toLowerCase());
+            modifiedTransaction.setDate(modifiedTransaction.getDate() == null ? t.getDate() : modifiedTransaction.getDate());
+            modifiedTransaction.setDescription(modifiedTransaction.getDescription() == null ? t.getDescription() : modifiedTransaction.getDescription());
+            modifiedTransaction.setUser(t.getUser());
+
+            setBudgetOfUser(t,modifiedTransaction);
+
+            service.deleteTransactionById("expense", transactionId);
+            service.saveTransactionToDB(Optional.of(modifiedTransaction),"expense");
+            return ResponseEntity.ok().body(modifiedTransaction);
+        }).orElse(ResponseEntity.notFound().build());
+    }
 
     @DeleteMapping("/delete/expense/category/{categoryId}")
     public ResponseEntity<String> deleteExpenseCategory(@PathVariable Long categoryId) {
@@ -135,4 +176,13 @@ public class ExpenseController extends ControlHelper {
         return ResponseEntity.ok().body("The transaction has been deleted successfully!");
     }
 
+    private void setBudgetOfUser(ExpenseTransaction transaction, ExpenseTransaction modTransaction){
+        if(modTransaction.getExpenseAmount() != null) {
+            Double change = modTransaction.getExpenseAmount() - transaction.getExpenseAmount();
+            User user = transaction.getUser();
+            user.setCurrentBudget(user.getCurrentBudget() - change);
+        } else{
+            modTransaction.setExpenseAmount(transaction.getExpenseAmount());
+        }
+    }
 }
