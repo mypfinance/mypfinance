@@ -1,6 +1,8 @@
 package com.project.mypfinance.controller;
 
 import com.project.mypfinance.entities.IncomeCategory;
+import com.project.mypfinance.entities.IncomeTransaction;
+import com.project.mypfinance.entities.User;
 import com.project.mypfinance.service.TransactionService;
 import com.project.mypfinance.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +83,12 @@ public class IncomeController extends ControlHelper {
         return ResponseEntity.ok("Income category has been saved successfully!");
     }
 
+    @PostMapping(value = "/add/income/transaction", consumes = "application/json")
+    public ResponseEntity<String> addIncomeTransaction(@RequestBody IncomeTransaction transaction) {
+        service.addTransaction("income",transaction.getDate().toString(), transaction.getIncomeAmount(), transaction.getCategoryName().toLowerCase(), transaction.getDescription());
+        return ResponseEntity.ok().body("Transaction added successfully!");
+    }
+
     @PutMapping("/modify/income/category/{categoryId}")
     public ResponseEntity<?> modifyIncomeCategory(@PathVariable Long categoryId, @RequestBody IncomeCategory modifiedCategory) {
         if(!service.categoryExists("income", categoryId)) {
@@ -93,7 +101,10 @@ public class IncomeController extends ControlHelper {
 
         Optional<IncomeCategory> category = ((Optional<IncomeCategory>)service.getCategory("income", categoryId));
 
-        //implement Transaction check once the IncomeTransaction Layer is in place
+        if(category.get().getIncomeTransactions() != null && category.get().getIncomeTransactions().size() > 0){
+            throw new ResponseStatusException(NOT_ACCEPTABLE, "There are attached transactions to category - " + categoryId
+                    + ", please either delete those transactions or ADD the category as a new one!");
+        }
 
         return category.map(c -> {
             modifiedCategory.setCategoryName(modifiedCategory.getCategoryName() == null ? c.getCategoryName() : modifiedCategory.getCategoryName().toLowerCase());
@@ -105,6 +116,42 @@ public class IncomeController extends ControlHelper {
 
 //                    new category changes its ID automatically. Old ID frees up.
             return ResponseEntity.ok().body(modifiedCategory);
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/modify/income/transaction/{transactionId}")
+    public ResponseEntity<?> modifyIncomeTransaction(@PathVariable Long transactionId, @RequestBody IncomeTransaction modifiedTransaction){
+        Optional<IncomeTransaction> transaction = ((Optional<IncomeTransaction>)service.getTransactionById("income", transactionId));
+
+        if(transaction.isEmpty())
+            throw new ResponseStatusException(NOT_FOUND,"There is no transaction with id: " + transactionId);
+
+        if(modifiedTransaction.getIncomeTransactionId() != null)
+            throw new ResponseStatusException(NOT_ACCEPTABLE, "Don't provide an id for the new transaction, because you cannot modify it.");
+
+        if (modifiedTransaction.getCategoryName() != null) {
+            if (service.categoryExists("income", modifiedTransaction.getIncomeCategory().getIncomeCategoryId())) {
+                modifiedTransaction.setIncomeCategory((IncomeCategory) service
+                        .getCategory("income", modifiedTransaction.getIncomeCategory().getIncomeCategoryId()).get());
+            } else {
+                Optional<IncomeCategory> newCategory = Optional.of(
+                        new IncomeCategory(modifiedTransaction.getCategoryName(), userService.getUser()));
+                service.saveCategoryToDB(newCategory, "income");
+                modifiedTransaction.setIncomeCategory(newCategory.get());
+            }
+        }
+
+        return transaction.map(t -> {
+            modifiedTransaction.setCategoryName(modifiedTransaction.getCategoryName() == null ? t.getCategoryName().toLowerCase() : modifiedTransaction.getCategoryName().toLowerCase());
+            modifiedTransaction.setDate(modifiedTransaction.getDate() == null ? t.getDate() : modifiedTransaction.getDate());
+            modifiedTransaction.setDescription(modifiedTransaction.getDescription() == null ? t.getDescription() : modifiedTransaction.getDescription());
+            modifiedTransaction.setUser(t.getUser());
+
+            setBudgetOfUser(t,modifiedTransaction);
+
+            service.deleteTransactionById("income", transactionId);
+            service.saveTransactionToDB(Optional.of(modifiedTransaction),"income");
+            return ResponseEntity.ok().body(modifiedTransaction);
         }).orElse(ResponseEntity.notFound().build());
     }
 
@@ -138,5 +185,13 @@ public class IncomeController extends ControlHelper {
         return ResponseEntity.ok().body("The transaction has been deleted successfully!");
     }
 
-    //Implement method for setting the budget later!
+    private void setBudgetOfUser(IncomeTransaction transaction, IncomeTransaction modTransaction){
+        if(modTransaction.getIncomeAmount() != null) {
+            Double change = modTransaction.getIncomeAmount() - transaction.getIncomeAmount();
+            User user = transaction.getUser();
+            user.setCurrentBudget(user.getCurrentBudget() - change);
+        } else{
+            modTransaction.setIncomeAmount(transaction.getIncomeAmount());
+        }
+    }
 }
