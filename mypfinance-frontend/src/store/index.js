@@ -7,6 +7,7 @@ import { expenseCategories } from '@/store/modules/expensecategories'
 import createPersistedState from 'vuex-persistedstate'
 import SecureLS from 'secure-ls'
 import { incomeCategories } from '@/store/modules/incomecategories'
+import { expenseTransactions } from '@/store/modules/expensetransactions'
 const ls = new SecureLS({ isCompression: false })
 
 Vue.use(Vuex)
@@ -17,7 +18,8 @@ const store = new Vuex.Store({
     loader,
     account,
     expenseCategories,
-    incomeCategories
+    incomeCategories,
+    expenseTransactions
   },
   plugins: [
     createPersistedState({
