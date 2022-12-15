@@ -32,7 +32,7 @@ jobs:
         with:
           azure-subscription: ${{ env.AZURE_SUBSCRIPTION }}
           action: Deploy
-          service-name: mypfinance
+          service-name: mypfinance-backend
           app-name: mypfinance-backend
           use-staging-deployment: false
           package: ${{ env.ASC_PACKAGE_PATH }}/**/*.war
