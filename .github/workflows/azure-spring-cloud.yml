@@ -35,4 +35,4 @@ jobs:
           service-name: mypfinance-backend
           app-name: mypfinance-backend
           use-staging-deployment: false
-          package: ${{ env.ASC_PACKAGE_PATH }}/**/*.war
+          package: ${{ env.ASC_PACKAGE_PATH }}/**/*.jar
