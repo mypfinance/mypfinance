@@ -1,32 +1,34 @@
 <template>
-  <div id="app">
-    <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </nav>
-    <router-view/>
-  </div>
+  <v-app>
+    <v-snackbar v-model="alert.show" :color="alert.color" top>
+      {{alert.message}}
+      <template v-slot:action="{ attrs }">
+        <v-icon small dark v-bind="attrs" @click="alert.show = false">close</v-icon>
+      </template>
+    </v-snackbar>
+    <router-view class="my-3"></router-view>
+  </v-app>
 </template>
 
+<script>
+import { mapState } from 'vuex'
+
+export default {
+  name: 'app',
+  components: {},
+  computed: {
+    ...mapState({
+      alert: state => state.alert.alert
+    })
+  },
+  data () {
+    return {}
+  }
+}
+</script>
+
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-nav {
-  padding: 30px;
-}
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
+.container {
+  max-width: 1185px !important;
 }
 </style>
