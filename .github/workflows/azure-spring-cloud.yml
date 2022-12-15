@@ -32,7 +32,7 @@ jobs:
         with:
           azure-subscription: ${{ env.AZURE_SUBSCRIPTION }}
           action: Deploy
-          service-name: spring-blog
-          app-name: spring-blog
+          service-name: mypfinance
+          app-name: mypfinance-backend
           use-staging-deployment: false
-          package: ${{ env.ASC_PACKAGE_PATH }}/**/*.jar
+          package: ${{ env.ASC_PACKAGE_PATH }}/**/*.war
