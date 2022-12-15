@@ -7,6 +7,9 @@ on:
 jobs:
   test_pull_request:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./mypfinance-frontend
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
