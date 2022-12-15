@@ -20,6 +20,7 @@ jobs:
 
       - name: maven build, clean
         run: |
+          cd mypfinance-backend
           mvn clean package -DskipTests
       - name: Login via Azure CLI
         uses: azure/login@v1
