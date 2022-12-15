@@ -10,7 +10,7 @@
 
 	<artifactId>mypfinance-backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>mypfinance-backend</name>
 	<description>Backend service of the MyPFinance App.</description>
 	<properties>
