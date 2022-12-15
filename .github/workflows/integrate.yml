@@ -1,20 +1,40 @@
-name: Node Continuous Integration
+name: Build & deploy
 
 on:
-  pull_request:
-    branches: [ main ]
+  push:
+    branches:
+      - main
 
 jobs:
-  test_pull_request:
+  build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./mypfinance-frontend
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
         with:
-          node-version: 12
-      - run: npm ci
-      - run: npm test
-      - run: npm build
+          node-version: ${{ matrix.node-version }}
+
+      - name: Clean Cache
+        working-directory: ./mypfinance-frontend
+        run: |
+          npm cache clean --force
+      - name: CI Install
+        working-directory: ./mypfinance-frontend
+        run: |
+          npm ci
+      - name: NPM Install
+        working-directory: ./mypfinance-frontend
+        run: |
+          npm install
+      - name: Production Build
+        working-directory: ./mypfinance-frontend
+        run: |
+          npm run build
+        env:
+          CI: false
