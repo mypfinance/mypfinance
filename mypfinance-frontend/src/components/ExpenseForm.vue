@@ -76,7 +76,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import validations from '@/helpers/validations'
+import validations from '@/helpers/validation'
 
 export default {
   props: {
