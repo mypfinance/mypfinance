@@ -88,7 +88,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import validations from '@/helpers/validations'
+import validations from '@/helpers/validation'
 import router from '@/router/index'
 
 export default {
