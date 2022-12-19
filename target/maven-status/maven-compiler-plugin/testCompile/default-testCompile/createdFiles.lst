@@ -1,0 +1,7 @@
+com\project\mypfinance\MypfinanceApplicationTests.class
+com\project\mypfinance\service\UserServiceImplTest.class
+com\project\mypfinance\controllers\SecurityControllerTest.class
+com\project\mypfinance\controllers\UserControllerTest.class
+com\project\mypfinance\service\TransactionServiceImplTest.class
+com\project\mypfinance\AbstractTest.class
+com\project\mypfinance\controllers\ExpenseControllerTest.class

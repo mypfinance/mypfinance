@@ -1,0 +1,27 @@
+{
+  "groups": [
+    {
+      "name": "mypfinance",
+      "type": "com.project.mypfinance.config.ConfigProperties",
+      "sourceType": "com.project.mypfinance.config.ConfigProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "mypfinance.db-password",
+      "type": "java.lang.String",
+      "sourceType": "com.project.mypfinance.config.ConfigProperties"
+    },
+    {
+      "name": "mypfinance.db-username",
+      "type": "java.lang.String",
+      "sourceType": "com.project.mypfinance.config.ConfigProperties"
+    },
+    {
+      "name": "mypfinance.secret-key",
+      "type": "java.lang.String",
+      "sourceType": "com.project.mypfinance.config.ConfigProperties"
+    }
+  ],
+  "hints": []
+}
