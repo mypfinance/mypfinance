@@ -2,12 +2,12 @@ import axios from 'axios'
 import authHeader from './auth-header'
 
 const API_URL = 'http://localhost:8080/'
+
 const headers = {
-  withCredentials: false,
+  withCredentials: true,
   headers: {
     Authorization: authHeader(),
-    'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*'
+    'Content-Type': 'application/json'
   }
 }
 

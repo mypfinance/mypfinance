@@ -20,7 +20,6 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "*")
 public class IncomeController extends ControlHelper {
 
     private final UserService userService;

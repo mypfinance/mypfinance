@@ -6,8 +6,7 @@ var headers = {
   withCredentials: false,
   headers: {
     Authorization: authHeader(),
-    'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*'
+    'Content-Type': 'application/json'
   }
 }
 

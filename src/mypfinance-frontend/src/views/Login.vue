@@ -91,7 +91,7 @@ export default {
       if (this.loginForm.username && this.loginForm.password) {
         this.$store.dispatch('account/login', this.loginForm)
           .then(() => {
-            this.$router.push('/')
+            this.$router.push('/dashboard')
           })
           .finally(() => {
             window.location.reload()

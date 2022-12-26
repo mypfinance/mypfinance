@@ -18,7 +18,6 @@ import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "*")
 public class ExpenseController extends ControlHelper {
     private final UserService userService;
     private final TransactionService service;

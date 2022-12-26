@@ -13,7 +13,6 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "*")
 @Slf4j
 public class SecurityController {
 

@@ -14,7 +14,6 @@ import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "*")
 public class BudgetController extends ControlHelper{
 
     private final UserService userService;

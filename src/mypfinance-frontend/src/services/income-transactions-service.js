@@ -3,11 +3,10 @@ import authHeader from '@/services/auth-header'
 
 const API_URL = 'http://localhost:8080/'
 var headers = {
-  withCredentials: false,
+  withCredentials: true,
   headers: {
     Authorization: authHeader(),
-    'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*'
+    'Content-Type': 'application/json'
   }
 }
 
