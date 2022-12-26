@@ -1,9 +1,8 @@
 module.exports = {
   devServer: {
-    port: 8081,
     proxy: {
       '/api': {
-        target: 'http://localhost:8080',
+        target: 'https://mypfinance.herokuapp.com',
         ws: true,
         changeOrigin: true
       }
