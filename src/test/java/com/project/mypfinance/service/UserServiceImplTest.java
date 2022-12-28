@@ -60,7 +60,7 @@ class UserServiceImplTest {
         User user = getOneUser();
         when(mockPasswordEncoder.encode(user.getPassword())).thenReturn("encoded");
         Role role = new Role(Role.ROLE_USER);
-        when(mockRoleRepo.findByRoleName(role.getRoleName())).thenReturn(role);
+        when(mockRoleRepo.findByRoleName(role.getRoleName())).thenReturn(Optional.of(role));
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
 
 //        when
@@ -111,7 +111,7 @@ class UserServiceImplTest {
 //        given
         User user = getOneUser();
         Role role = new Role("ROLE_SUPER_USER");
-        when(mockRoleRepo.findByRoleName(role.getRoleName())).thenReturn(role);
+        when(mockRoleRepo.findByRoleName(role.getRoleName())).thenReturn(Optional.of(role));
         when(SecurityContextHolder.getContext().getAuthentication().getName()).thenReturn(user.getUsername());
         when(mockUserRepo.findUserByUsername(user.getUsername())).thenReturn(Optional.of(user));
 

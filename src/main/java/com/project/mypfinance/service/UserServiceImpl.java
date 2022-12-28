@@ -5,6 +5,7 @@ import com.project.mypfinance.entities.User;
 import com.project.mypfinance.repository.RoleRepo;
 import com.project.mypfinance.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.InvalidPropertyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -56,10 +57,14 @@ public class UserServiceImpl  implements UserService, UserDetailsService {
     public User saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        Set<Role> role = new HashSet<>();
-        role.add(roleRepo.findByRoleName(Role.ROLE_USER));
+        Optional<Role> localRole = roleRepo.findByRoleName(Role.ROLE_USER);
 
-        user.setRoles(role);
+        if(localRole.isPresent()) {
+            user.setRoles(Set.of(localRole.get()));
+        } else {
+            Role savedRole = saveRole(new Role(Role.ROLE_USER));
+            user.setRoles(Set.of(savedRole));
+        }
 
         log.info("User was saved to the database successfully!");
         return userRepo.save(user);
@@ -82,10 +87,14 @@ public class UserServiceImpl  implements UserService, UserDetailsService {
 
     @Override
     public void addRoleToUser(String roleName) {
-        Role role = roleRepo.findByRoleName(roleName);
+        Optional<Role> role = roleRepo.findByRoleName(roleName);
         User user = getUser();
-        user.addRoleToUser(role);
-        log.info("Role has been added to user: " + user.getUsername() + " successfully!");
+        if(role.isPresent()) {
+            user.addRoleToUser(role.get());
+            log.info("Role has been added to user: " + user.getUsername() + " successfully!");
+        } else {
+            throw new RuntimeException("Role with name: " + roleName + ", exists in the DB!");
+        }
     }
 
     @Override
