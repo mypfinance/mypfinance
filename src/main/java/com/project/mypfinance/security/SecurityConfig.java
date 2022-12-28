@@ -6,23 +6,22 @@ import com.project.mypfinance.exception.CustomAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static com.project.mypfinance.entities.Role.*;
 import static org.springframework.http.HttpMethod.*;
@@ -54,11 +53,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 customAuthenticationEntryPoint(), authenticationManagerBean(), configProperties);
         customAuthFilter.setFilterProcessesUrl("/api/login");
 
-        http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().authorizeRequests()
-                .antMatchers("/", "index", "/css/*", "/js/*", "/api/register/**", "/api/login*").permitAll();
+        http.cors(Customizer.withDefaults());
+        http.csrf().disable();
+
+//        For Security operations:
+        http.authorizeRequests().antMatchers("/", "index", "/css/*", "/js/*", "/api/register/**", "/api/login*", "/api/refresh/token/**").permitAll();
 
 //        For User operations:
         http.authorizeRequests().antMatchers(GET, "/api/users*").hasAnyRole(ADMIN);
@@ -94,6 +93,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilter(customAuthFilter);
         http.addFilterBefore(new CustomAuthorizationFilter(customAccessDeniedHandler(), configProperties),
                 UsernamePasswordAuthenticationFilter.class);
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.addAllowedOrigin("http://localhost:8081");
+        config.setAllowedHeaders(Arrays.asList(
+                HttpHeaders.AUTHORIZATION,
+                HttpHeaders.CONTENT_TYPE,
+                HttpHeaders.ACCEPT));
+        config.setAllowedMethods(Arrays.asList(
+                HttpMethod.GET.name(),
+                HttpMethod.POST.name(),
+                HttpMethod.PUT.name(),
+                HttpMethod.OPTIONS.name(),
+                HttpMethod.DELETE.name()));
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+
+        return source;
     }
 
     @Bean

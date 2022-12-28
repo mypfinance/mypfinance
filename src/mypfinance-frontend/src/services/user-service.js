@@ -1,8 +1,6 @@
 import axios from 'axios'
 import authHeader from './auth-header'
 
-const API_URL = 'https://mypfinance.herokuapp.com/'
-
 const headers = {
   withCredentials: true,
   headers: {
@@ -13,7 +11,7 @@ const headers = {
 
 class UserService {
   getUserInfo () {
-    return axios.get(API_URL + 'api/user', headers)
+    return axios.get( '/api/user', headers)
       .then(response => {
         return response.data
       })
@@ -27,14 +25,14 @@ class UserService {
       lastName: user.lastName,
       currentBudget: user.currentBudget
     }
-    return axios.put(API_URL + 'api/user/modify', requestUser, headers
+    return axios.put('/api/user/modify', requestUser, headers
     ).then(response => {
       return response.data
     })
   }
 
   deleteUserFromApp () {
-    return axios.delete(API_URL + 'api/user/delete', headers
+    return axios.delete('/api/user/delete', headers
     ).then(response => {
       return response.data
     })
