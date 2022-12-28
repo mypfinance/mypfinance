@@ -1,11 +1,9 @@
 import axios from 'axios'
 
-const API_URL = 'https://mypfinance.herokuapp.com/'
-
 class AuthService {
   login (loginForm) {
     return axios
-      .get(API_URL + '/api/login', {
+      .get('/api/login', {
         params: {
           username: loginForm.username,
           password: loginForm.password
@@ -24,7 +22,7 @@ class AuthService {
   }
 
   register (user) {
-    return axios.post(API_URL + '/api/register', {
+    return axios.post('/api/register', {
       username: user.username,
       password: user.password,
       firstName: user.firstName,

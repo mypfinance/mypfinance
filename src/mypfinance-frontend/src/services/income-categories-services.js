@@ -1,7 +1,6 @@
 import axios from 'axios'
 import authHeader from '@/services/auth-header'
 
-const API_URL = 'https://mypfinance.herokuapp.com/'
 const headers = {
   withCredentials: true,
   headers: {
@@ -12,7 +11,7 @@ const headers = {
 
 class IncomeCategoriesService {
   getAllIncomeCategories () {
-    return axios.get(API_URL + 'api/income/categories', headers
+    return axios.get('/api/income/categories', headers
     ).then(response => {
       return response.data
     })
@@ -24,7 +23,7 @@ class IncomeCategoriesService {
       color: incomeCategory.incomeCategory.color
     }
 
-    return axios.post(API_URL + 'api/add/income/category', requestCategory, headers
+    return axios.post('/api/add/income/category', requestCategory, headers
     ).then(response => {
       return response.data
     })
@@ -37,7 +36,7 @@ class IncomeCategoriesService {
     }
     const incomeCategoryId = modifiedCategory.incomeCategory.incomeCategoryId
 
-    return axios.put(API_URL + 'api/modify/income/category/' + incomeCategoryId, requestCategory, headers
+    return axios.put('/api/modify/income/category/' + incomeCategoryId, requestCategory, headers
     ).then(response => {
       return response.data
     })
@@ -46,7 +45,7 @@ class IncomeCategoriesService {
   deleteIncomeCategory (incomeCategoryId) {
     const id = incomeCategoryId.incomeCategoryId
 
-    return axios.delete(API_URL + 'api/delete/income/category/' + id, headers
+    return axios.delete( '/api/delete/income/category/' + id, headers
     ).then(response => {
       return response.data
     })

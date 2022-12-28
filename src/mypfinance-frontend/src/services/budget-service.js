@@ -1,7 +1,6 @@
 import axios from 'axios'
 import authHeader from '@/services/auth-header'
 
-const API_URL = 'https://mypfinance.herokuapp.com/'
 var headers = {
   withCredentials: false,
   headers: {
@@ -12,7 +11,7 @@ var headers = {
 
 class BudgetService {
   getUserCurrentBudget (currentPage, perPage) {
-    return axios.get(API_URL + 'api/user/current/budget', headers
+    return axios.get('/api/user/current/budget', headers
     ).then(response => {
       return response.data
     })
