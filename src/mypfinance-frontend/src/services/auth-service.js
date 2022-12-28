@@ -1,9 +1,11 @@
 import axios from 'axios'
 
+const API_URL = process.env.VUE_APP_BASE_URL
+
 class AuthService {
   login (loginForm) {
     return axios
-      .get('/api/login', {
+      .get(API_URL + '/api/login', {
         params: {
           username: loginForm.username,
           password: loginForm.password
@@ -22,7 +24,7 @@ class AuthService {
   }
 
   register (user) {
-    return axios.post('/api/register', {
+    return axios.post(API_URL + '/api/register', {
       username: user.username,
       password: user.password,
       firstName: user.firstName,

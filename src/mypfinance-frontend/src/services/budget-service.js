@@ -2,7 +2,6 @@ import axios from 'axios'
 import authHeader from '@/services/auth-header'
 
 var headers = {
-  withCredentials: false,
   headers: {
     Authorization: authHeader(),
     'Content-Type': 'application/json'
@@ -11,7 +10,7 @@ var headers = {
 
 class BudgetService {
   getUserCurrentBudget (currentPage, perPage) {
-    return axios.get('/api/user/current/budget', headers
+    return axios.get(process.env.VUE_APP_BASE_URL + '/api/user/current/budget', headers
     ).then(response => {
       return response.data
     })

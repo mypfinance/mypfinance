@@ -1,8 +1,9 @@
 import axios from 'axios'
 import authHeader from '@/services/auth-header'
 
+const API_URL = process.env.VUE_APP_BASE_URL
+
 var headers = {
-  withCredentials: true,
   headers: {
     Authorization: authHeader(),
     'Content-Type': 'application/json'
@@ -11,42 +12,42 @@ var headers = {
 
 class IncomeTransactionsService {
   getAllIncomeTransactions (currentPage, perPage) {
-    return axios.get( '/api/income/transactions', headers
+    return axios.get(API_URL + '/api/income/transactions', headers
     ).then(response => {
       return response.data.transactions
     })
   }
 
   getIncomeTransactionById (id) {
-    return axios.get('/api/income/transaction/' + id, headers
+    return axios.get(API_URL + '/api/income/transaction/' + id, headers
     ).then(response => {
       return response.data
     })
   }
 
   getIncomeTransactionsByDate (date, currentPage, perPage) {
-    return axios.get( '/api/income/transactions/date' + date, headers
+    return axios.get(API_URL + '/api/income/transactions/date' + date, headers
     ).then(response => {
       return response.data
     })
   }
 
   getTransactionsForCurrentMonth (year, month) {
-    return axios.get(  '/api/income/transactions/current/' + year + '/' + month, headers
+    return axios.get(API_URL + '/api/income/transactions/current/' + year + '/' + month, headers
     ).then(response => {
       return response.data
     })
   }
 
   getTransactionsForCurrentMonthByCategory (year, month) {
-    return axios.get( '/api/income/transactions/year/' + year + '/' + month, headers
+    return axios.get(API_URL + '/api/income/transactions/year/' + year + '/' + month, headers
     ).then(response => {
       return response.data
     })
   }
 
   getIncomeTransactionByCategory (category, currentPage, perPage) {
-    return axios.get('/api/income/transactions/category' + category, headers
+    return axios.get(API_URL + '/api/income/transactions/category' + category, headers
     ).then(response => {
       return response.data
     })
@@ -60,7 +61,7 @@ class IncomeTransactionsService {
       description: transaction.incomeTransaction.description
     }
 
-    return axios.post('/api/add/income/transaction', requestTransaction, headers)
+    return axios.post(API_URL + '/api/add/income/transaction', requestTransaction, headers)
       .then(response => {
         return response.data
       })
@@ -76,7 +77,7 @@ class IncomeTransactionsService {
 
     const incomeTransactionId = transaction.incomeTransaction.incomeTransactionId
 
-    return axios.put('/api/modify/income/transaction/' + incomeTransactionId, requestTransaction, headers)
+    return axios.put(API_URL + '/api/modify/income/transaction/' + incomeTransactionId, requestTransaction, headers)
       .then(response => {
         return response.data
       })
@@ -85,13 +86,13 @@ class IncomeTransactionsService {
   deleteIncomeTransactionByCategory (categoryName) {
     const incomeCategoryName = categoryName.categoryName
 
-    return axios.delete('/api/delete/income/transactions/category' + incomeCategoryName, headers)
+    return axios.delete(API_URL + '/api/delete/income/transactions/category' + incomeCategoryName, headers)
   }
 
   deleteIncomeTransactionById (id) {
     const incomeTransactionId = id.incomeTransactionId
 
-    return axios.delete('/api/delete/income/transaction/' + incomeTransactionId, headers).then(response => {
+    return axios.delete(API_URL + '/api/delete/income/transaction/' + incomeTransactionId, headers).then(response => {
       return response.data
     })
   }

@@ -94,7 +94,7 @@ export default {
             this.$router.push('/dashboard')
           })
           .finally(() => {
-            window.location.reload()
+           // window.location.reload()
             this.loading = false
           })
       }
