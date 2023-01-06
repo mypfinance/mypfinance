@@ -1,6 +1,5 @@
 com\project\mypfinance\entities\Role.class
 com\project\mypfinance\repository\ExpenseTransactionRepository.class
-com\project\mypfinance\MypfinanceApplication$1.class
 META-INF\spring-configuration-metadata.json
 com\project\mypfinance\repository\IncomeTransactionRepository.class
 com\project\mypfinance\entities\ExpenseTransaction.class

@@ -58,7 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
 
 //        For Security operations:
-        http.authorizeRequests().antMatchers("/", "index", "/css/*", "/js/*", "/api/register/**", "/api/login*", "/api/refresh/token/**").permitAll();
+        http.authorizeRequests().antMatchers("/**").permitAll();
 
 //        For User operations:
         http.authorizeRequests().antMatchers(GET, "/api/users*").hasAnyRole(ADMIN);
