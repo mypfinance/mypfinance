@@ -5,8 +5,7 @@ const API_URL = process.env.VUE_APP_BASE_URL
 
 var headers = {
   headers: {
-    Authorization: authHeader(),
-    'Content-Type': 'application/json'
+    Authorization: authHeader()
   }
 }
 

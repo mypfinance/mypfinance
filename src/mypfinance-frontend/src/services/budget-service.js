@@ -3,8 +3,7 @@ import authHeader from '@/services/auth-header'
 
 var headers = {
   headers: {
-    Authorization: authHeader(),
-    'Content-Type': 'application/json'
+    Authorization: authHeader()
   }
 }
 
