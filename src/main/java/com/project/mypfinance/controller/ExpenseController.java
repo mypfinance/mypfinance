@@ -1,10 +1,12 @@
 package com.project.mypfinance.controller;
 
+import com.project.mypfinance.dto.PeriodDto;
 import com.project.mypfinance.entities.ExpenseCategory;
 import com.project.mypfinance.entities.ExpenseTransaction;
 import com.project.mypfinance.entities.User;
 import com.project.mypfinance.service.UserService;
 import com.project.mypfinance.service.TransactionService;
+import org.hibernate.persister.entity.Loadable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.*;
 
 import static org.springframework.http.HttpStatus.*;
@@ -63,6 +66,10 @@ public class ExpenseController extends ControlHelper {
         return service.getTransactionByCurrentYear("expense");
     }
 
+    @GetMapping("/expense/transactions/period")
+    public HashMap<String, Object> fetchTransactionByPeriod(@RequestHeader String Authorization, @RequestBody PeriodDto periodDto) {
+        return service.getTransactionByPeriod(periodDto.getFrom(), periodDto.getTo());
+    }
     @GetMapping("/expense/transactions/year/{year}/{month}")
     public HashMap<String, Object> fetchTransactionsByYearMonthAndCategory(@PathVariable Integer year,
                                                                            @PathVariable Integer month) {

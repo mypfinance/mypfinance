@@ -243,6 +243,23 @@ public class TransactionServiceImpl implements TransactionService {
         return result;
     }
 
+    @Override
+    public HashMap<String, Object> getTransactionByPeriod(LocalDate from, LocalDate to) {
+        String username = getUsernameByAuthentication();
+        HashMap<String, Object> result = new LinkedHashMap<>();
+        result.put("username", username);
+
+        result.put("period", from + "_" + to);
+
+        List<ExpenseTransaction> transactions = expenseTransactionRepo
+                .fetchTransactionsByPeriod(username, from, to);
+        result.put("transactions", transactions);
+        result.put("totalAmount", transactions.stream()
+                .mapToDouble(ExpenseTransaction::getExpenseAmount).sum());
+
+        return result;
+    }
+
     public HashMap<String, Object> getTransactionByCurrentYear(String type) {
         String username = getUsernameByAuthentication();
         int currentYear = LocalDate.now().getYear();

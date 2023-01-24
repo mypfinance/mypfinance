@@ -9,12 +9,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
-public interface ExpenseTransactionRepository extends JpaRepository<ExpenseTransaction, Long>{@Query("SELECT e "
+public interface ExpenseTransactionRepository extends JpaRepository<ExpenseTransaction, Long> {
+    @Query("SELECT e "
         + "FROM ExpenseTransaction e")
-Page<ExpenseTransaction> filteredTransactions(Pageable pageable);
+    Page<ExpenseTransaction> filteredTransactions(Pageable pageable);
 
     @Query("SELECT e "
             + "FROM ExpenseTransaction e "
@@ -61,6 +63,13 @@ Page<ExpenseTransaction> filteredTransactions(Pageable pageable);
             "AND e.user.username = ?1 " +
             "AND e.categoryName = ?4")
     List<ExpenseTransaction> filterTransactionsByCategoryYearAndMonth(String username, Integer year, Integer month, String categoryName);
+
+
+    @Query(value = "SELECT e FROM ExpenseTransaction e " +
+            "WHERE e.user.username = ?1 " +
+            "AND e.date >= ?2 " +
+            "AND e.date <= ?3")
+    List<ExpenseTransaction> fetchTransactionsByPeriod(String username, LocalDate form, LocalDate to);
 
     List<ExpenseTransaction> findExpenseTransactionsByCategoryName(String categoryName);
 

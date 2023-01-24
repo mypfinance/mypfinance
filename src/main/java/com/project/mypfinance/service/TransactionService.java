@@ -1,10 +1,12 @@
 package com.project.mypfinance.service;
 
+import com.project.mypfinance.entities.ExpenseTransaction;
 import com.project.mypfinance.entities.User;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 public interface TransactionService {
 
@@ -29,6 +31,8 @@ public interface TransactionService {
     HashMap<String, Object> getTransactionByYear(Integer year, String type);
 
     HashMap<String, Object> getTransactionForCurrentMonth(Integer year, Integer month, String type);
+
+    HashMap<String, Object> getTransactionByPeriod(LocalDate from, LocalDate to);
 
     HashMap<String, Object> getTransactionByCurrentYear(String type);
 
