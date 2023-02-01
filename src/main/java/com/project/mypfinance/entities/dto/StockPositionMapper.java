@@ -11,7 +11,7 @@ public class StockPositionMapper {
         return StockPosition.builder()
                 .stockName(domain.getStockName())
                 .stockSymbol(domain.getStockSymbol())
-                .stockAmount(domain.getStockAmount())
+                .stockUnits(domain.getStockUnits())
                 .stockPrice(domain.getStockPrice())
                 .build();
     }
@@ -21,7 +21,7 @@ public class StockPositionMapper {
         return StockPositionRequest.builder()
                 .stockName(dto.getStockName())
                 .stockSymbol(dto.getStockSymbol())
-                .stockAmount(dto.getStockAmount())
+                .stockUnits(dto.getStockUnits())
                 .stockPrice(dto.getStockPrice())
                 .build();
     }

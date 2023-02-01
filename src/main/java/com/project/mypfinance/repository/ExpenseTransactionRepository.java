@@ -12,9 +12,11 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDate;
 import java.util.List;
-public interface ExpenseTransactionRepository extends JpaRepository<ExpenseTransaction, Long>{@Query("SELECT e "
-        + "FROM ExpenseTransaction e")
-Page<ExpenseTransaction> filteredTransactions(Pageable pageable);
+public interface ExpenseTransactionRepository extends JpaRepository<ExpenseTransaction, Long>{
+
+    @Query("SELECT e "
+            + "FROM ExpenseTransaction e")
+    Page<ExpenseTransaction> filteredTransactions(Pageable pageable);
 
     @Query("SELECT e "
             + "FROM ExpenseTransaction e "

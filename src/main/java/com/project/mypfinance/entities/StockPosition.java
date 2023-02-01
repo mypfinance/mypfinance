@@ -8,6 +8,9 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+import static javax.persistence.CascadeType.*;
+import static javax.persistence.CascadeType.DETACH;
+
 @Entity
 @Table(name="stock_positions")
 @Getter
@@ -33,8 +36,13 @@ public class StockPosition {
     @Column(name = "stock_price")
     private BigDecimal stockPrice;
 
-    @Column(name = "stock_amount")
-    private Long stockAmount;
+    @Column(name = "stock_units")
+    private Long stockUnits;
+
+    @ManyToOne(cascade= {PERSIST, MERGE, REFRESH, DETACH})
+    @JoinColumn(name = "user_stock_position_id", referencedColumnName = "user_id")
+    @JsonIgnore
+    private User user;
 
     @Override
     public boolean equals(Object o) {

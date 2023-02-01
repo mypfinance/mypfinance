@@ -17,5 +17,5 @@ public class StockPositionRequest {
 
     private BigDecimal stockPrice;
 
-    private Long stockAmount;
+    private Long stockUnits;
 }
