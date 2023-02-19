@@ -8,6 +8,7 @@ import Income from '@/views/Income.vue'
 import Dashboard from '@/views/Dashboard.vue'
 import Settings from '@/views/Settings.vue'
 import Profile from '@/views/Profile.vue'
+import PortfolioPositions from "@/views/PortfolioPositions.vue";
 import store from '@/store/index.js'
 
 Vue.use(Router)
@@ -23,7 +24,8 @@ export const router = new Router({
         { path: '/expenses', component: Expenses },
         { path: '/income', component: Income },
         { path: '/settings', component: Settings },
-        { path: '/profile', component: Profile }
+        { path: '/profile', component: Profile },
+        { path: '/portfolio', component: PortfolioPositions }
       ]
     },
     { path: '/login', component: Login },

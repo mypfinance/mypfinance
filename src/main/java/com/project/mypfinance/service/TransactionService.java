@@ -1,9 +1,7 @@
 package com.project.mypfinance.service;
 
-import com.project.mypfinance.entities.User;
 import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Optional;
 public interface TransactionService {

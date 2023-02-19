@@ -90,6 +90,7 @@ export default {
   components: { ExpenseForm, DoughnutChart },
   mounted () {
     this.$store.dispatch('statistics/loadCurrentBudget')
+    this.$store.dispatch('account/getUserInfo')
   },
   computed: {
     ...mapGetters('statistics', ['monthlyBudget', 'yearlyExpenses', 'monthlyBudgetsByCategory'])

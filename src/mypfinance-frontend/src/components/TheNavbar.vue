@@ -99,7 +99,8 @@ export default {
         { icon: 'dashboard', text: 'Dashboard', route: '/dashboard' },
         { icon: 'shopping_cart', text: 'Expenses', route: '/expenses' },
         { icon: 'mdi-money', text: 'Income', route: '/income' },
-        { icon: 'settings', text: 'Settings', route: '/settings' }
+        { icon: 'settings', text: 'Settings', route: '/settings' },
+        { text: 'Portfolio', route: '/portfolio' }
       ],
       menuItems: [
         { icon: 'perm_identity', text: 'Profile', route: '/profile' },

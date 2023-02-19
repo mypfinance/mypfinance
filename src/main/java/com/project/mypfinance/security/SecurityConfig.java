@@ -100,12 +100,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.addAllowedOrigin("http://localhost:8081");
-        config.addAllowedOrigin("https://mypfinance.herokuapp.com");
         config.setAllowedHeaders(List.of("*"));
         config.setAllowedMethods(Arrays.asList(
                 HttpMethod.GET.name(),
                 HttpMethod.POST.name(),
                 HttpMethod.PUT.name(),
+                HttpMethod.PATCH.name(),
                 HttpMethod.OPTIONS.name(),
                 HttpMethod.DELETE.name()));
 
