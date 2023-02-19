@@ -36,6 +36,7 @@ public class PortfolioServiceImpl implements PortfolioService {
 
         result.put("username", username);
         result.put("totalPositions", transactions.getTotalElements());
+        result.put("positions", transactions.getContent());
         result.put("totalPages", transactions.getTotalPages());
 
         return result;

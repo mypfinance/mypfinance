@@ -18,7 +18,6 @@ import static javax.persistence.CascadeType.DETACH;
 @ToString
 @RequiredArgsConstructor
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class StockPosition {
     @Id
